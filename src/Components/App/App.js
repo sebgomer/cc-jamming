@@ -12,9 +12,21 @@ class App extends React.Component {
     this.state = {
       SearchResults: [{name: 'Harder', artist: 'Kanye West', album: 'Graduation', id: 1},
                       {name: 'Faster', artist: 'Kanye West', album: 'Graduation', id: 2},
-                      {name: 'Stronger', artist: 'Kanye West', album: 'Graduation', id: 3}]
-      }
+                      {name: 'Stronger', artist: 'Kanye West', album: 'Graduation', id: 3}],
+      playlistName: 'Test',
+      playlistTracks: [{ name: 'Track1', artist: 'Artist1', album: 'Album1', id: 'id1'}]
     }
+
+    this.addTrack = this.addTrack.bind(this); 
+  }
+
+  addTrack(track) {
+    if(this.state.playlistTracks.find( savedTrack => savedTrack.id === track.id )) {
+      return; 
+    }
+    //NOT SURE IF THIS IS RIGHT; PUSH METHOD? (QUESTION 41)
+    this.setState({playlistTacks: track})
+  }
 
   render() {
     return (
@@ -23,8 +35,8 @@ class App extends React.Component {
         <div className="App">
           <SearchBar />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.SearchResults}/>
-            <Playlist />
+            <SearchResults searchResults={this.state.SearchResults} onAdd={this.addTrack}/>
+            <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks}/>
           </div>
         </div>
       </div>
