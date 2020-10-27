@@ -21,11 +21,20 @@ class App extends React.Component {
   }
 
   addTrack(track) {
-    if(this.state.playlistTracks.find( savedTrack => savedTrack.id === track.id )) {
+    //needed, see below
+    let tracks = this.state.playlistTracks;
+    if(tracks.find( savedTrack => savedTrack.id === track.id )) {
       return; 
     }
     //NOT SURE IF THIS IS RIGHT; PUSH METHOD? (QUESTION 41)
-    this.setState({playlistTacks: track})
+    //26_10_2020: .push() was right, add to existing array of objects
+    //BUT: create variable to not change state directly!
+    tracks.push(track);
+    this.setState({playlistTracks: tracks})
+  }
+
+  removeTrack(track) {
+    
   }
 
   render() {
