@@ -7,7 +7,7 @@ import Playlist from '../Playlist/Playlist'
 
 class App extends React.Component {
   constructor(props) {
-    //Question 31: Pull in props from React.Component (?)
+    // Question 31: Pull in props from React.Component (?)
     super(props);
     this.state = {
       SearchResults: [{name: 'Harder', artist: 'Kanye West', album: 'Graduation', id: 1},
@@ -18,7 +18,9 @@ class App extends React.Component {
     }
 
     this.addTrack = this.addTrack.bind(this); 
-    this.removeTrack = this.removeTrack.bind(this); 
+    this.removeTrack = this.removeTrack.bind(this);
+    this.updatePlaylistName = this.updatePlaylistName.bind(this); 
+    this.savePlaylist = this.savePlaylist.bind(this); 
   }
 
   addTrack(track) {
@@ -27,21 +29,32 @@ class App extends React.Component {
     if(tracks.find( savedTrack => savedTrack.id === track.id )) {
       return; 
     }
-    //NOT SURE IF THIS IS RIGHT; PUSH METHOD? (QUESTION 41)
-    //26_10_2020: .push() was right, add to existing array of objects
-    //BUT: create variable to not change state directly!
+    // NOT SURE IF THIS IS RIGHT; PUSH METHOD? (QUESTION 41)
+    // 26_10_2020: .push() was right, add to existing array of objects
+    // BUT: create variable to not change state directly!
     tracks.push(track);
     this.setState({playlistTracks: tracks})
   }
 
 
-  //QUESTION 49 IMPLEMENTATION 
+  // QUESTION 49 IMPLEMENTATION 
   removeTrack(track) {
     let tracks = this.state.playlistTracks; 
 
     tracks = tracks.filter(filteredTrack => filteredTrack.id !== track.id)
 
     this.setState({playlistTracks: tracks}); 
+  }
+
+  updatePlaylistName(name) {
+    this.setState({playlistName: name})
+  }
+
+  // QUESTION 63: Generates an array of uri values called 
+  // trackURIs from the playlistTracks property.
+  savePlaylist() {
+    let uri = this.state.playlistTracks.map(track => track.uri);
+    console.log(uri); 
   }
 
   render() {
@@ -52,7 +65,11 @@ class App extends React.Component {
           <SearchBar />
           <div className="App-playlist">
             <SearchResults searchResults={this.state.SearchResults} onAdd={this.addTrack}/>
-            <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack}/>
+            <Playlist playlistName={this.state.playlistName} 
+                      playlistTracks={this.state.playlistTracks} 
+                      onRemove={this.removeTrack}
+                      onNameChange={this.updatePlaylistName}
+                      onSave={this.savePlaylist}/>
           </div>
         </div>
       </div>
