@@ -12,7 +12,6 @@ class Playlist extends React.Component {
 
     handleNameChange(event) {
         const newPlaylistName = event.target.value;
-        console.log(`${Math.round(event.timeStamp/10)/100} sec. passed`); 
         this.setState({playlistName: newPlaylistName}); 
     }
     
