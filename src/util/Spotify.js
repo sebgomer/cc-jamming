@@ -60,7 +60,7 @@ let Spotify = {
         }
         const access_token = Spotify.getAccessToken();
         const headers = {Authorization: access_token};
-        const id;
+        let id;
 
 
         //QUESTION 92: Save response ID from user API 
