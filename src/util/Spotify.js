@@ -50,7 +50,7 @@ let Spotify = {
                 artists: track.artists[0].name,
                 album: track.album.name, 
                 uri: track.uri
-            }))
+            })); 
         })
     }, 
 
