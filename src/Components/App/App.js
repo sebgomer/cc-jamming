@@ -59,8 +59,11 @@ class App extends React.Component {
     console.log(uri); 
   }
 
-  search(search) {
-    console.log(search);
+  // QUESTION 88: Update the state of searchResults with the value resolved from Spotify.search()‘s promise.
+  search(term) {
+    Spotify.search(term).then(searchResultsUtil => {
+      this.setState({searchResults: searchResultsUtil})
+    })
   }
 
   render() {
