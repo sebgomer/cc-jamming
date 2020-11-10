@@ -1,12 +1,9 @@
-let accessToken = ""
+let accessToken; 
 const client_id = "6a6b12546af34886989e3d782002156c"
 const redirect_uri = "http://localhost:3000/"
 
-const request_url = "https://accounts.spotify.com/authorize?client_id=6a6b12546af34886989e3d782002156c&redirect_uri=http%3A%2F%2Flocalhost:3000%2F&response_type=token"
-const response_url = "http://localhost:3000/#access_token=BQDG_nP8fGsUg9Tt6qk2uk1Se8oxUf7JH5IfKmduCKaNF0I2s8S3aSdr0-R3GU4sefAyeGPo59EQ_X9E2LAIiFDuWrQmNYwZnWHgt81S-ScThNpDstrqQHAGQ1MQlQhIfQRIs6Fy-h-yrZM&token_type=Bearer&expires_in=3600"
-
 let Spotify = {
-    getAccessToken() { 
+    getAccessToken() {
         if(accessToken) {
             return accessToken; 
         }
@@ -29,6 +26,7 @@ let Spotify = {
     },
     
     search(term) {
+        const accessToken = Spotify.getAccessToken();
         const url = `https://api.spotify.com/v1/search?type=track&q=${term}`; 
         fetch(url, {
             method: 'GET',
@@ -54,12 +52,12 @@ let Spotify = {
         })
     }, 
 
-    savePlaylist(playlistName, trackUri) {
-        if(!(playlistName && trackUri)) {
+    savePlaylist(playlistName, trackUris) {
+        if(!(playlistName || trackUris.length)) {
             return; 
         }
-        const access_token = Spotify.getAccessToken();
-        const headers = {Authorization: access_token};
+        const accessToken = Spotify.getAccessToken();
+        const headers = {Authorization: accessToken};
         let id;
 
 
@@ -68,7 +66,26 @@ let Spotify = {
         .then(res => res.json())
         .then(data => {
             id = data.id;
-            return id;
+            // QUESTION 93: Use the returned user ID to make a POST request that creates a new playlist in the user’s account and returns a playlist ID.
+            // --> nest fetch using user id above
+            return fetch(`https://api.spotify.com/v1/users/${id}/playlists`,{
+                    method: 'POST',
+                    headers: headers,
+                    // name: playlistName
+                    // argument needs to be passed in another way:
+                    body: JSON.stringify({ name: playlistName })  
+            })
+            .then(res => res.json())
+            .then(data => {
+                const playlistId = data.id;
+                // QUESTION 94: another nested fetch
+                // Use the returned user ID to make a POST request that creates a new playlist in the user’s account and returns a playlist ID.
+                return fetch(`/v1/users/${id}/playlists/${playlistId}/tracks`, {
+                    headers: headers,
+                    method: 'POST',
+                    body: JSON.stringify({ uris: trackUris})
+                })
+            })
         })
     }
 }

@@ -11,11 +11,9 @@ class App extends React.Component {
     // Question 31: Pull in props from React.Component (?)
     super(props);
     this.state = {
-      SearchResults: [{name: 'Harder', artist: 'Kanye West', album: 'Graduation', id: 1},
-                      {name: 'Faster', artist: 'Kanye West', album: 'Graduation', id: 2},
-                      {name: 'Stronger', artist: 'Kanye West', album: 'Graduation', id: 3}],
-      playlistName: 'Test',
-      playlistTracks: [{ name: 'Track1', artist: 'Artist1', album: 'Album1', id: 'id1'}]
+      SearchResults: [],
+      playlistName: 'My Playlist',
+      playlistTracks: []
     }
 
     this.addTrack = this.addTrack.bind(this); 
@@ -55,14 +53,20 @@ class App extends React.Component {
   // QUESTION 63: Generates an array of uri values called 
   // trackURIs from the playlistTracks property.
   savePlaylist() {
-    let uri = this.state.playlistTracks.map(track => track.uri);
-    console.log(uri); 
+    let trackUris = this.state.playlistTracks.map(track => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackUris)
+    .then(() => {
+      this.setState({
+        playlistName: 'New Playlist',
+        playlistTracks: []
+      })
+    })
   }
 
   // QUESTION 88: Update the state of searchResults with the value resolved from Spotify.search()‘s promise.
   search(term) {
-    Spotify.search(term).then(searchResultsUtil => {
-      this.setState({searchResults: searchResultsUtil})
+    Spotify.search(term).then(receivedResults => {
+      this.setState({searchResults: receivedResults})
     })
   }
 
